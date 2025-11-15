@@ -1,0 +1,27 @@
+services:
+  api:
+    build: ./src
+    container_name: nba_api
+    restart: "no"
+    stdin_open: true
+    tty: true
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/app
+    environment:
+      - PYTHONPATH=/app
+
+  web:
+    build: ./web
+    container_name: nba_web
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - "3000:3000"
+    # environment:
+    #   - NEXT_PUBLIC_API_URL=http://localhost:8000
+    volumes:
+      - ./web:/app
+      - /app/node_modules
